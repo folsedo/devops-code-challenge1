@@ -2,9 +2,12 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-2'
-        AWS_ACCOUNT_ID = '099771438874'
-    }
+    AWS_REGION = 'us-east-2'
+    AWS_ACCOUNT_ID = '099771438874'
+
+    FRONTEND_ECR = '099771438874.dkr.ecr.us-east-2.amazonaws.com/devops-code-challenge1-frontend'
+    BACKEND_ECR  = '099771438874.dkr.ecr.us-east-2.amazonaws.com/devops-code-challenge1-backend'
+}
 
     stages {
 
@@ -48,5 +51,23 @@ pipeline {
                 '''
             }
         }
+    }
+}
+
+stage('Push Frontend to ECR') {
+    steps {
+        sh '''
+            docker tag devops-code-challenge1-frontend:latest $FRONTEND_ECR:latest
+            docker push $FRONTEND_ECR:latest
+        '''
+    }
+}
+
+stage('Push Backend to ECR') {
+    steps {
+        sh '''
+            docker tag devops-code-challenge1-backend:latest $BACKEND_ECR:latest
+            docker push $BACKEND_ECR:latest
+        '''
     }
 }
