@@ -5,3 +5,4 @@ node_modules/
 *.tfstate.*
 crash.log
 terraform.tfvars
+terraform.tfvars
