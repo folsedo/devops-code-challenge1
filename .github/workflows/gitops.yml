@@ -1,0 +1,38 @@
+name: GitOps Validation
+
+on:
+  push:
+    branches:
+      - gitops
+  pull_request:
+    branches:
+      - gitops
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        working-directory: terraform
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+        working-directory: terraform
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: terraform
+
+      - name: Build Frontend Docker Image
+        run: docker build -t tech-challenge-frontend ./frontend
+
+      - name: Build Backend Docker Image
+        run: docker build -t tech-challenge-backend ./backend
